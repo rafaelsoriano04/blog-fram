@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cómo Utilizar la Herramienta Mermaid - FRAM Development</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Header Flotante */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            padding: 15px 0;
+            background: rgba(91, 130, 160, 0.95);
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-bar {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 700px;
+            width: fit-content;
+            border: none;
+        }
+
+        .header.scrolled .nav-bar {
+            margin: 0 20px;
+            border-radius: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            max-width: none;
+            width: auto;
+            justify-content: center;
+            border: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.4s ease;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            padding: 6px 12px;
+            border-radius: 15px;
+        }
+
+        .nav-link:hover {
+            color: #5b82a0;
+        }
+
+        .home-icon {
+            font-size: 16px;
+        }
+
+        /* Article Content */
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 120px 40px 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .article-category {
+            background: rgba(91, 130, 160, 0.2);
+            color: #5b82a0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid rgba(91, 130, 160, 0.3);
+        }
+
+        .article-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .article-meta i {
+            color: #5b82a0;
+            margin-right: 8px;
+        }
+
+        .article-description {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .article-content {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(91, 130, 160, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #5b82a0, #4a6b85);
+        }
+
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #5b82a0;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 20px;
+        }
+
+        .content-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+        }
+
+        .content-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .content-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .content-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #5b82a0;
+            font-size: 12px;
+        }
+
+        .highlight-box {
+            background: rgba(91, 130, 160, 0.1);
+            border: 1px solid rgba(91, 130, 160, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #0a0a0a;
+            padding: 0 10px;
+            font-size: 18px;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(91, 130, 160, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #5b82a0;
+            overflow-x: auto;
+        }
+
+        /* Video Section */
+        .video-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(91, 130, 160, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .video-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #5b82a0, #4a6b85);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .video-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #5b82a0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .video-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(91, 130, 160, 0.2);
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+            gap: 15px;
+        }
+
+        .video-placeholder i {
+            font-size: 48px;
+            color: #5b82a0;
+        }
+
+        .video-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #5b82a0, #4a6b85);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(91, 130, 160, 0.3);
+        }
+
+        .video-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(91, 130, 160, 0.4);
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(91, 130, 160, 0.2);
+            color: #5b82a0;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            border: 1px solid rgba(91, 130, 160, 0.3);
+        }
+
+        .back-button:hover {
+            background: #5b82a0;
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .back-button i {
+            font-size: 16px;
+        }
+
+        /* Footer */
+        .article-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(91, 130, 160, 0.2);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-link {
+            color: #5b82a0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        /* Background */
+        .article-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            z-index: -1;
+        }
+
+        .article-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(91, 130, 160, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(70, 100, 130, 0.1) 0%, transparent 50%);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 100px 20px 60px;
+            }
+
+            .article-title {
+                font-size: 28px;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .article-content {
+                padding: 25px;
+            }
+
+            .video-section {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .content-text {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-title {
+                font-size: 24px;
+            }
+
+            .article-content {
+                padding: 20px;
+            }
+
+            .video-section {
+                padding: 15px;
+            }
+
+            .back-button {
+                font-size: 12px;
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="article-background"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-bar">
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link home-icon"><i class="bi bi-house-door"></i></a>
+                <a href="index.html#vision" class="nav-link">VISIÓN</a>
+                <a href="index.html#mision" class="nav-link">MISIÓN</a>
+                <a href="index.html#proyectos" class="nav-link">PROYECTOS</a>
+                <a href="index.html#equipo" class="nav-link">EQUIPO</a>
+                <a href="index.html#blog" class="nav-link">BLOG</a>
+                <a href="index.html#contacto" class="nav-link">CONTACTO</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <div class="article-container">
+        <a href="index.html#blog" class="back-button">
+            <i class="bi bi-arrow-left"></i>
+            Volver al Blog
+        </a>
+
+        <div class="article-header">
+            <span class="article-category">Documentación</span>
+            <h1 class="article-title">Cómo Utilizar la Herramienta Mermaid</h1>
+            <div class="article-meta">
+                <span><i class="bi bi-calendar"></i>1 de Octubre, 2025</span>
+                <span><i class="bi bi-person"></i>FRAM Development</span>
+                <span><i class="bi bi-clock"></i>15 min de lectura</span>
+            </div>
+            <p class="article-description">
+                Descubre cómo crear diagramas de flujo, gráficos de secuencia y diagramas de clases de manera eficiente utilizando Mermaid. Una herramienta esencial para documentar y visualizar procesos en el desarrollo de software.
+            </p>
+        </div>
+
+        <div class="article-content">
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="bi bi-info-circle"></i>
+                    ¿Qué es Mermaid?
+                </h2>
+                <p class="content-text">
+                    Mermaid es una herramienta de diagramación y gráficos basada en JavaScript que utiliza definiciones de texto inspiradas en Markdown para crear y modificar diagramas dinámicamente. Es ampliamente utilizada en GitHub, GitLab y muchas otras plataformas para documentación técnica.
+                </p>
+                <div class="highlight-box">
+                    <p class="content-text">
+                        <strong>¿Por qué usar Mermaid?</strong> Permite crear diagramas profesionales usando solo texto, lo que facilita el versionado, la colaboración y la integración con sistemas de documentación existentes.
+                    </p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="bi bi-diagram-3"></i>
+                    Tipos de Diagramas Disponibles
+                </h2>
+                <p class="content-text">
+                    Mermaid soporta una amplia variedad de tipos de diagramas para diferentes necesidades de documentación:
+                </p>
+                <ul class="content-list">
+                    <li><strong>Diagramas de Flujo:</strong> Para representar procesos y flujos de trabajo</li>
+                    <li><strong>Diagramas de Secuencia:</strong> Ideales para mostrar interacciones entre diferentes actores</li>
+                    <li><strong>Diagramas de Clases:</strong> Perfectos para modelar estructuras de software orientado a objetos</li>
+                    <li><strong>Diagramas de Estado:</strong> Para representar máquinas de estado y transiciones</li>
+                    <li><strong>Diagramas de Entidad-Relación:</strong> Para diseño de bases de datos</li>
+                    <li><strong>Diagramas de Gantt:</strong> Para planificación y gestión de proyectos</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="bi bi-code-slash"></i>
+                    Sintaxis Básica
+                </h2>
+                <p class="content-text">
+                    La sintaxis de Mermaid es intuitiva y fácil de aprender. Aquí tienes algunos ejemplos básicos:
+                </p>
+                
+                <h3 style="color: #5b82a0; font-size: 18px; margin: 25px 0 15px;">Diagrama de Flujo Simple:</h3>
+                <div class="code-block">
+graph TD
+    A[Inicio] --> B{¿Condición?}
+    B -->|Sí| C[Acción 1]
+    B -->|No| D[Acción 2]
+    C --> E[Fin]
+    D --> E[Fin]
+                </div>
+
+                <h3 style="color: #5b82a0; font-size: 18px; margin: 25px 0 15px;">Diagrama de Secuencia:</h3>
+                <div class="code-block">
+sequenceDiagram
+    participant A as Usuario
+    participant B as Sistema
+    A->>B: Solicitar datos
+    B-->>A: Enviar respuesta
+    A->>B: Confirmar recepción
+                </div>
+            </div>
+
+            <!-- Video Tutorial Section -->
+            <div class="video-section">
+                <h2 class="video-title">
+                    <i class="bi bi-play-circle"></i>
+                    Video Tutorial Completo
+                </h2>
+                <p class="video-description">
+                    Te recomendamos ver este excelente tutorial en video que explica paso a paso cómo utilizar Mermaid desde cero hasta crear diagramas avanzados.
+                </p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <i class="bi bi-youtube"></i>
+                        <span>Tutorial de Mermaid</span>
+                        <span style="font-size: 14px; opacity: 0.7;">Haz clic en el enlace de abajo para ver el video</span>
+                    </div>
+                </div>
+                <a href="https://youtu.be/zzUAdnVszrA" target="_blank" class="video-link">
+                    <i class="bi bi-play-fill"></i>
+                    Ver Tutorial en YouTube
+                </a>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="bi bi-gear"></i>
+                    Implementación en Proyectos
+                </h2>
+                <p class="content-text">
+                    Existen varias formas de integrar Mermaid en tus proyectos:
+                </p>
+                <ul class="content-list">
+                    <li><strong>GitHub/GitLab:</strong> Soporte nativo en archivos README y documentación</li>
+                    <li><strong>Páginas Web:</strong> Integración directa con JavaScript</li>
+                    <li><strong>Editores:</strong> Extensiones para VS Code, Atom y otros editores</li>
+                    <li><strong>Herramientas de Documentación:</strong> Compatible con GitBook, Notion y más</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p class="content-text">
+                        <strong>Consejo Profesional:</strong> En FRAM Development utilizamos Mermaid para documentar la arquitectura de nuestros sistemas y procesos de desarrollo, lo que nos permite mantener la documentación siempre actualizada y sincronizada con el código.
+                    </p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="bi bi-lightbulb"></i>
+                    Mejores Prácticas
+                </h2>
+                <p class="content-text">
+                    Para aprovechar al máximo Mermaid en tus proyectos, considera estas recomendaciones:
+                </p>
+                <ul class="content-list">
+                    <li>Mantén los diagramas simples y enfocados en un propósito específico</li>
+                    <li>Usa nombres descriptivos para nodos y conexiones</li>
+                    <li>Aprovecha los colores y estilos para mejorar la legibilidad</li>
+                    <li>Documenta la sintaxis utilizada para facilitar futuras modificaciones</li>
+                    <li>Integra los diagramas en tu flujo de CI/CD para mantenerlos actualizados</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="article-footer">
+            <p class="footer-text">
+                ¿Te ha resultado útil este artículo? Compártelo con tu equipo y síguenos para más contenido sobre desarrollo de software.
+            </p>
+            <div class="footer-links">
+                <a href="index.html#blog" class="footer-link">← Volver al Blog</a>
+                <a href="index.html#contacto" class="footer-link">Contacto</a>
+                <a href="index.html" class="footer-link">Inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Efectos interactivos
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('.header');
+            
+            // Efecto de scroll en el header
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                
+                if (scrolled > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Navegación suave
+            const navLinks = document.querySelectorAll('.nav-link[href^="index.html#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    window.location.href = href;
+                });
+            });
+
+            // Animación de entrada para el contenido
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent) {
+                articleContent.style.opacity = '0';
+                articleContent.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    articleContent.style.transition = 'all 0.8s ease';
+                    articleContent.style.opacity = '1';
+                    articleContent.style.transform = 'translateY(0)';
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>
