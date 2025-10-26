@@ -2,7 +2,6 @@ name: Deploy static site to Netlify
 on:
   push:
     branches: [ main ]
-  pull_request:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
